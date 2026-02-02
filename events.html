@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en" data-audience="members">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Events – Vets Ladies Golf Club</title>
+  <meta name="description" content="Member events and club calendar." />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html#top" aria-label="Vets Ladies Golf Club home">
+        <img src="../assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
+        <span class="brand-name">Vets Ladies Golf Club</span>
+      </a>
+
+      <nav class="nav" aria-label="Member navigation">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+        <ul id="nav-menu" class="nav-menu">
+          <li><a href="../events.html">Public Events</a></li>
+          <li><a href="../community.html">Community</a></li>
+          <li><a href="../index.html#contact">Contact</a></li>
+          <li><a class="member-link" href="index.html">Member Area</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <h1>Member Events & Calendar</h1>
+
+        <p class="lead">
+          Full club calendar, including member-only events and meetings.
+        </p>
+
+        <!-- JSON-driven events -->
+        <p id="events-error" hidden></p>
+        <p id="events-empty" hidden>No upcoming events at this time.</p>
+        <div id="events-list" class="cards" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Vets Ladies Golf Club</small>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/events.js"></script>
+</body>
+</html>

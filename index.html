@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Area – Vets Ladies Golf Club</title>
+  <meta name="description" content="Member area for Vets Ladies Golf Club." />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER / NAV -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html#top" aria-label="Vets Ladies Golf Club home">
+        <img src="../assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
+        <span class="brand-name">Vets Ladies Golf Club</span>
+      </a>
+
+      <nav class="nav" aria-label="Member navigation">
+        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+        <ul id="nav-menu" class="nav-menu">
+          <li><a href="../events.html">Public Events</a></li>
+          <li><a href="../community.html">Community</a></li>
+          <li><a href="../index.html#contact">Contact</a></li>
+          <li><a class="member-link" href="index.html" aria-current="page">Member Area</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section">
+      <div class="container">
+        <h1>Member Area</h1>
+        <p class="lead">Quick links, weekly info, announcements, and club resources.</p>
+
+        <!-- A) Photo upload control (Phase 2 uses an external form/link) -->
+        <div class="cards" style="margin-top: 1rem;">
+          <article class="card">
+            <h2 style="margin-top:0;">Share photos</h2>
+            <p>Use this link to submit photos for the club carousel.</p>
+            <!-- Replace with your Google Form link later -->
+            <p><a class="btn btn-secondary" href="#" aria-label="Submit photos">Submit photos</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1) Photo carousel -->
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Photos</h2>
+
+        <div class="carousel" aria-label="Club photo carousel">
+          <div class="carousel-track" tabindex="0">
+            <!-- Replace placeholders with real images later -->
+            <figure class="carousel-item">
+              <img src="../assets/img/hero.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+            <figure class="carousel-item">
+              <img src="../assets/img/hero.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+            <figure class="carousel-item">
+              <img src="../assets/img/hero.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+          </div>
+
+          <div class="carousel-controls">
+            <button class="btn btn-ghost" type="button" data-carousel="prev">Prev</button>
+            <button class="btn btn-ghost" type="button" data-carousel="next">Next</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) Weekly signup link + instructions -->
+    <section class="section">
+      <div class="container">
+        <h2>Weekly signup</h2>
+        <p><strong>Important:</strong> Please read the weekly instructions before signing up.</p>
+
+        <div class="cards">
+          <article class="card">
+            <h3 style="margin-top:0;">Signup link</h3>
+            <!-- Replace with your real signup link -->
+            <p><a class="btn" href="#">Open weekly signup</a></p>
+            <ul class="bullets">
+              <li>Signup opens: [Day/Time]</li>
+              <li>Signup closes: [Day/Time]</li>
+              <li>Notes: [short instruction]</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) Announcements (auto-expiring; JSON-driven like events) -->
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Announcements</h2>
+
+        <p id="announcements-error" hidden></p>
+        <p id="announcements-empty" hidden>No announcements at this time.</p>
+
+        <div id="announcements-list" class="cards" aria-live="polite"></div>
+
+        <!-- Optional: link to full announcements page -->
+        <p style="margin-top: 1rem;">
+          <a class="btn btn-secondary" href="announcements.html" style="display:none;">View all announcements</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 4) Club officers -->
+    <section class="section">
+      <div class="container">
+        <h2>Club officers</h2>
+        <div class="cards">
+          <article class="card">
+            <h3 style="margin-top:0;">[Title]</h3>
+            <p>[Name]</p>
+          </article>
+          <article class="card">
+            <h3 style="margin-top:0;">[Title]</h3>
+            <p>[Name]</p>
+          </article>
+          <article class="card">
+            <h3 style="margin-top:0;">[Title]</h3>
+            <p>[Name]</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5) Play Etiquette -->
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Play Etiquette – Ready Golf</h2>
+        <ul class="bullets">
+          <li>Be prepared to play when it’s your turn.</li>
+          <li>Limit practice swings; keep pace with the group ahead.</li>
+          <li>Play a provisional when appropriate.</li>
+          <li>Help others look for balls briefly; then move on.</li>
+        </ul>
+      </div>
+    </section>
+
+    
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Vets Ladies Golf Club</small>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/carousel.js"></script>
+  <script src="../js/announcements.js"></script>
+</body>
+</html>

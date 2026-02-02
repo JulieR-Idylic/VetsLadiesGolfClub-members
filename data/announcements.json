@@ -1,0 +1,18 @@
+{
+  "announcements": [
+    {
+      "id": "signup-opens",
+      "title": "Signup opens Sunday at 6:00 PM",
+      "message": "Please sign up by Tuesday at noon so tee times can be finalized.",
+      "expiresOn": "2026-02-10",
+      "pinned": true
+    },
+    {
+      "id": "guest-policy",
+      "title": "Guest day reminder",
+      "message": "Guests are welcome on select dates—see the Events page for details.",
+      "expiresOn": "2026-05-13",
+      "pinned": false
+    }
+  ]
+}
