@@ -35,7 +35,7 @@
     if (!listEl) return;
 
     try{
-      const res = await fetch("../data/announcements.json", { cache: "no-store" });
+      const res = await fetch("/data/announcements.json", { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       const items = Array.isArray(data.announcements) ? data.announcements : [];
