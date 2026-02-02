@@ -1,18 +1,25 @@
 {
   "announcements": [
     {
-      "id": "signup-opens",
-      "title": "Signup opens Sunday at 6:00 PM",
-      "message": "Please sign up by Tuesday at noon so tee times can be finalized.",
-      "expiresOn": "2026-02-10",
+      "id": "ghin-dues",
+      "title": "Pay your 2026 GHIN Dues",
+      "message": "Be sure you've paid your $60 GHIN dues to Dennis McKee / Mens Club",
+      "expiresOn": "2026-03-10",
       "pinned": true
     },
     {
-      "id": "guest-policy",
-      "title": "Guest day reminder",
-      "message": "Guests are welcome on select dates—see the Events page for details.",
-      "expiresOn": "2026-05-13",
-      "pinned": false
+      "id": "club-dues",
+      "title": "Pay your 2026 Club Dues by March 1",
+      "message": "Annual club membership dues $20 to Heidy Wiese, Treasurer",
+      "expiresOn": "2026-04-01",
+      "pinned": true
+    },
+    {
+      "id": "eclectic-due",
+      "title": "Enter Eclectic Competition by March 1",
+      "message": "The last day to enter this year's Eclectic competition is March 1. Pay to Karen Winter, Eclectic captain",
+      "expiresOn": "2026-03-10",
+      "pinned": true
     }
   ]
 }

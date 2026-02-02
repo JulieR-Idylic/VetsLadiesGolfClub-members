@@ -14,42 +14,64 @@
   <!-- HEADER / NAV -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="/index.html#top" aria-label="Vets Ladies Golf Club home">
-        <img src="assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
-        <span class="brand-name">Vets Ladies Golf Club</span>
-      </a>
 
+      <!-- LEFT: Brand + Public button -->
+      <div class="header-left">
+        <a class="brand" href="index.html" aria-label="Member home">
+          <img src="assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
+          <span class="brand-name">Vets Ladies Golf Club</span>
+        </a>
+
+        <a
+          class="btn btn-secondary public-btn"
+          href="https://julier-idylic.github.io/VetsLadiesGolfClub/"
+        >
+          Public site
+        </a>
+      </div>
+
+      <!-- RIGHT: Menu -->
       <nav class="nav" aria-label="Member navigation">
-        <button class="nav-toggle" aria-expanded="false" aria-controls="nav-menu">Menu</button>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+        >
+          Menu
+        </button>
+
         <ul id="nav-menu" class="nav-menu">
-          <li><a href="/events.html">Public Events</a></li>
-          <li><a href="/community.html">Community</a></li>
-          <li><a href="/index.html#contact">Contact</a></li>
-          <li><a class="member-link" href="index.html" aria-current="page">Member Area</a></li>
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="results.html">Results / Scores</a></li>
+          <li><a href="directory.html">Member Directory</a></li>
+          <li><a href="documents.html">Documents</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+
+          <li class="nav-divider" role="separator" aria-hidden="true"></li>
+
+          <li>
+            <a href="photos.html" target="_blank" rel="noopener noreferrer">
+              Upload Photos
+            </a>
+          </li>
         </ul>
       </nav>
+
     </div>
   </header>
 
+
   <main id="main">
+    <!-- Intro -->
     <section class="section">
       <div class="container">
         <h1>Member Area</h1>
         <p class="lead">Quick links, weekly info, announcements, and club resources.</p>
-
-        <!-- A) Photo upload control (Phase 2 uses an external form/link) -->
-        <div class="cards" style="margin-top: 1rem;">
-          <article class="card">
-            <h2 style="margin-top:0;">Share photos</h2>
-            <p>Use this link to submit photos for the club carousel.</p>
-            <!-- Replace with your Google Form link later -->
-            <p><a class="btn btn-secondary" href="#" aria-label="Submit photos">Submit photos</a></p>
-          </article>
-        </div>
       </div>
     </section>
 
-    <!-- 1) Photo carousel -->
+    <!-- Photos carousel -->
     <section class="section section-alt">
       <div class="container">
         <h2>Photos</h2>
@@ -79,28 +101,32 @@
       </div>
     </section>
 
-    <!-- 2) Weekly signup link + instructions -->
+    <!-- Weekly signup link + instructions -->
     <section class="section">
       <div class="container">
-        <h2>Weekly signup</h2>
-        <p><strong>Important:</strong> Please read the weekly instructions before signing up.</p>
+        <h2>Weekly Signup</h2>
 
-        <div class="cards">
-          <article class="card">
-            <h3 style="margin-top:0;">Signup link</h3>
-            <!-- Replace with your real signup link -->
-            <p><a class="btn" href="#">Open weekly signup</a></p>
-            <ul class="bullets">
-              <li>Signup opens: [Day/Time]</li>
-              <li>Signup closes: [Day/Time]</li>
-              <li>Notes: [short instruction]</li>
-            </ul>
-          </article>
-        </div>
+        <p><strong>How to use the signup sheet:</strong></p>
+        <ul class="bullets">
+          <li><strong>Signing up:</strong> Select the SIGNUP link in an open slot, fill out and submit the form.</li>
+          <li><strong>Canceling your time:</strong> Select the CANCEL link next to your signup. Submit the form.</li>
+          <li><strong>Changing your time:</strong> Select the MODIFY link next to your signup. Pick a new time and submit the form.</li>
+        </ul>
+
+        <p>The signup sheet opens in a new tab.</p>
+
+        <a
+          class="btn btn-secondary"
+          href="https://docs.google.com/spreadsheets/d/1Td1tG71_zceWvL8R_wvmSfTOIpyUcaQdO9BZFPvHHAE/edit?usp=sharing"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Open Weekly Signup Sheet
+        </a>
       </div>
     </section>
 
-    <!-- 3) Announcements (auto-expiring; JSON-driven like events) -->
+    <!-- Announcements -->
     <section class="section section-alt">
       <div class="container">
         <h2>Announcements</h2>
@@ -108,40 +134,27 @@
         <p id="announcements-error" hidden></p>
         <p id="announcements-empty" hidden>No announcements at this time.</p>
 
+        <!-- If you later want non-card announcements, we’ll change this class in CSS cleanup -->
         <div id="announcements-list" class="cards" aria-live="polite"></div>
-
-        <!-- Optional: link to full announcements page -->
-        <p style="margin-top: 1rem;">
-          <a class="btn btn-secondary" href="announcements.html" style="display:none;">View all announcements</a>
-        </p>
       </div>
     </section>
 
-    <!-- 4) Club officers -->
+    <!-- Events -->
     <section class="section">
       <div class="container">
-        <h2>Club officers</h2>
-        <div class="cards">
-          <article class="card">
-            <h3 style="margin-top:0;">[Title]</h3>
-            <p>[Name]</p>
-          </article>
-          <article class="card">
-            <h3 style="margin-top:0;">[Title]</h3>
-            <p>[Name]</p>
-          </article>
-          <article class="card">
-            <h3 style="margin-top:0;">[Title]</h3>
-            <p>[Name]</p>
-          </article>
-        </div>
+        <h2>Upcoming Events</h2>
+
+        <div id="events-list" aria-live="polite"></div>
+
+        <p id="events-empty" hidden>No upcoming events posted yet.</p>
+        <p id="events-error" hidden></p>
       </div>
     </section>
 
-    <!-- 5) Play Etiquette -->
+    <!-- Play Etiquette -->
     <section class="section section-alt">
       <div class="container">
-        <h2>Play Etiquette – Ready Golf</h2>
+        <h2>Let's Play Ready Golf</h2>
         <ul class="bullets">
           <li>Be prepared to play when it’s your turn.</li>
           <li>Limit practice swings; keep pace with the group ahead.</li>
@@ -150,8 +163,6 @@
         </ul>
       </div>
     </section>
-
-    
   </main>
 
   <footer class="site-footer">
@@ -160,8 +171,12 @@
     </div>
   </footer>
 
+  <!-- Global scripts -->
   <script src="js/main.js"></script>
+
+  <!-- Feature scripts -->
   <script src="js/carousel.js"></script>
   <script src="js/announcements.js"></script>
+  <script src="js/events.js"></script>
 </body>
 </html>

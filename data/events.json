@@ -1,63 +1,57 @@
-{
-  "events": [
-    {
-      "id": "sesason_kickoff2026",
-      "title": "Season kickoff 2026",
-      "dateStart": "2026-03-04",
-      "description": "League registration opens. Details will be posted as they become available.",
-      "expiresOn": "2026-11-01",
-      "pinned": true,
-      "audience": "both"
-    },
-    {
-      "id": "opening-day-2026",
-      "title": "Competition Opening Day",
-      "dateStart": "2026-04-01",
-      "time": "10:00 AM",
-      "location": "Veterans Memorial Golf Course",
-      "description": "Kick off the season with our first official league play day.",
-      "expiresOn": "2026-11-01",
-      "audience": "both"
-    },
-    {
-      "id": "feb-clubmeeting-2026",
-      "title": "Signup Orientation",
-      "dateStart": "2026-02-11",
-      "time": "12:30 PM",
-      "location": "Veterans Memorial Golf Course",
-      "description": "Julie Richard will be walking through the changes to our online signup and answering your questions and assisting with bookmarking the Online Signup to your mobile devices",
-      "expiresOn": "2026-04-01",
-      "audience": "members"
-    },
-    {
-      "id": "ghindues-2026",
-      "title": "GHIN Dues 2026",
-      "dateStart": "2026-01-01",
-      "time": "",
-      "location": "",
-      "description": "GHIN dues $60 to Dennis McKee-Mens Club",
-      "expiresOn": "2026-04-01",
-      "audience": "members"
-    },
-    {
-      "id": "clubdues-2026",
-      "title": "Annual Club Dues 2026",
-      "dateStart": "2026-03-01",
-      "time": "",
-      "location": "",
-      "description": "Annual club membership dues $20 to Heidy Wiese, Treasurer",
-      "expiresOn": "2026-05-01",
-      "audience": "members"
-    },
-    {
-      "id": "eclectic-registration-2026",
-      "title": "Eclectic 2026",
-      "dateStart": "2026-03-01",
-      "time": "",
-      "location": "",
-      "description": " Last day to enter Eclectic competition; Karen Winter, Eclectic captain",
-      "expiresOn": "2026-05-01",
-      "audience": "members"
-    }
-  ]
-}
+  {
+    "events": [
+      {
+        "id": "sesason_kickoff2026",
+        "title": "Season kickoff 2026",
+        "dateStart": "2026-03-04",
+        "description": "League registration opens. Details will be posted as they become available.",
+        "expiresOn": "2026-11-01",
+        "pinned": true
+      },
+      {
+        "id": "opening-day-2026",
+        "title": "Competition Opening Day",
+        "dateStart": "2026-04-01",
+        "time": "10:00 AM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "Kick off the season with our first official league play day.",
+        "expiresOn": "2026-11-01"
+      },
+      {
+        "id": "feb-clubmeeting-2026",
+        "title": "Signup Orientation",
+        "dateStart": "2026-02-11",
+        "time": "12:30 PM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "Julie Richard will be walking through the changes to our online signup and answering your questions and assisting with bookmarking the Online Signup to your mobile devices",
+        "expiresOn": "2026-04-01"
+      },
+      {
+        "id": "ghindues-2026",
+        "title": "GHIN Dues 2026",
+        "dateStart": "2026-01-01",
+        "time": "",
+        "location": "",
+        "description": "GHIN dues $60 to Dennis McKee-Mens Club",
+        "expiresOn": "2026-04-01"
+      },
+      {
+        "id": "clubdues-2026",
+        "title": "Annual Club Dues 2026",
+        "dateStart": "2026-03-01",
+        "time": "",
+        "location": "",
+        "description": "Annual club membership dues $20 to Heidy Wiese, Treasurer",
+        "expiresOn": "2026-05-01"
+      },
+      {
+        "id": "eclectic-registration-2026",
+        "title": "Eclectic 2026",
+        "dateStart": "2026-03-01",
+        "time": "",
+        "location": "",
+        "description": " Last day to enter Eclectic competition; Karen Winter, Eclectic captain",
+        "expiresOn": "2026-05-01"
+      }
+    ]
+  }

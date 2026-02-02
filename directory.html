@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Member Directory – Vets Ladies Golf Club</title>
+  <meta name="description" content="Member directory and officers for Vets Ladies Golf Club." />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- HEADER / NAV (same as index.html) -->
+  <header class="site-header">
+    <div class="container header-inner">
+
+      <!-- LEFT: Brand + Public button -->
+      <div class="header-left">
+        <a class="brand" href="index.html" aria-label="Member home">
+          <img src="assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
+          <span class="brand-name">Vets Ladies Golf Club</span>
+        </a>
+
+        <a
+          class="btn btn-secondary public-btn"
+          href="https://julier-idylic.github.io/VetsLadiesGolfClub/"
+        >
+          Public site
+        </a>
+      </div>
+
+      <!-- RIGHT: Menu -->
+      <nav class="nav" aria-label="Member navigation">
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+        >
+          Menu
+        </button>
+
+        <ul id="nav-menu" class="nav-menu">
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="results.html">Results / Scores</a></li>
+          <li><a href="directory.html">Member Directory</a></li>
+          <li><a href="documents.html">Documents</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+
+          <li class="nav-divider" role="separator" aria-hidden="true"></li>
+
+          <li>
+            <a href="photos.html" target="_blank" rel="noopener noreferrer">
+              Upload Photos
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
+  </header>
+
+
+  <main id="main">
+    <!-- Directory link -->
+    <section class="section">
+      <div class="container">
+        <h1>Member Directory</h1>
+        <p class="lead">
+          Use the directory link below to find member contact information.
+        </p>
+
+        <!-- Placeholder link: replace href when ready -->
+        <p style="margin-top: 12px;">
+          <a
+            class="btn btn-secondary"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-disabled="true"
+            onclick="alert('Directory link placeholder — paste the real link into directory.html when ready.'); return false;"
+          >
+            Open Member Directory (placeholder)
+          </a>
+        </p>
+
+        <p style="margin-top: 8px; color: var(--muted);">
+          (This will open in a new tab once you add the real link.)
+        </p>
+      </div>
+    </section>
+
+    <!-- Officers -->
+    <section class="section section-alt">
+      <div class="container">
+        <h2>Club Officers</h2>
+        <p class="lead" style="font-size: 1rem;">
+          Reach out to the appropriate officer with questions.
+        </p>
+
+        <!-- Uses your existing .cards / .card styling -->
+        <div class="cards">
+          <article class="card">
+            <h3>President</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:president@example.com">president@example.com</a></p>
+            <p style="color: var(--muted);">General questions, approvals, escalations.</p>
+          </article>
+
+          <article class="card">
+            <h3>Vice President</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:vp@example.com">vp@example.com</a></p>
+            <p style="color: var(--muted);">Back-up contact, special projects.</p>
+          </article>
+
+          <article class="card">
+            <h3>Treasurer</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:treasurer@example.com">treasurer@example.com</a></p>
+            <p style="color: var(--muted);">Dues, payments, reimbursements.</p>
+          </article>
+
+          <article class="card">
+            <h3>Secretary</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:secretary@example.com">secretary@example.com</a></p>
+            <p style="color: var(--muted);">Announcements, notes, records.</p>
+          </article>
+
+          <article class="card">
+            <h3>Game Captain</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:games@example.com">games@example.com</a></p>
+            <p style="color: var(--muted);">Formats, weekly play questions, event details.</p>
+          </article>
+
+          <article class="card">
+            <h3>Handicap / Rules</h3>
+            <p><strong>Name:</strong> TBD</p>
+            <p><strong>Email:</strong> <a href="mailto:rules@example.com">rules@example.com</a></p>
+            <p style="color: var(--muted);">Handicap questions, rules clarifications.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>© <span id="year"></span> Vets Ladies Golf Club</small>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
