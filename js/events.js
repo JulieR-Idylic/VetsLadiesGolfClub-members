@@ -3,8 +3,9 @@
   const emptyEl = document.getElementById("events-empty");
   const errorEl = document.getElementById("events-error");
 
+  if (!listEl) return;
+
   function parseISODate(iso) {
-    // Accepts "YYYY-MM-DD". Returns a Date at local midnight.
     if (!iso || typeof iso !== "string") return null;
     const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!m) return null;
@@ -17,31 +18,25 @@
   }
 
   function isExpired(evt, today) {
-    // Visible through expiresOn day; disappears the day after
     const exp = parseISODate(evt.expiresOn);
-    if (!exp) return false; // forgiving: no expiresOn means never expires
+    if (!exp) return false;
     return today > exp;
-  }
-
-  function isPinnedNow(evt, today) {
-    if (!evt.pinned) return false;
-    // Optional pinnedUntil support (if you ever use it)
-    const until = parseISODate(evt.pinnedUntil);
-    if (!until) return true;
-    return today <= until;
   }
 
   function formatMonthDay(iso) {
     const d = parseISODate(iso);
     if (!d) return "";
-    return d.toLocaleDateString(undefined, { month: "short", day: "2-digit" });
+    return d.toLocaleDateString(undefined, {
+      month: "short",
+      day: "2-digit"
+    });
   }
 
   function buildEventRow(evt) {
     const row = document.createElement("div");
     row.className = "event-row";
 
-    // Line 1: Month+Day + Title
+    // Line 1: date + title
     const top = document.createElement("div");
     top.className = "event-topline";
 
@@ -51,13 +46,13 @@
 
     const title = document.createElement("div");
     title.className = "event-title";
-    title.textContent = evt.title || "Untitled event";
+    title.textContent = evt.title || "Event";
 
     top.appendChild(date);
     top.appendChild(title);
     row.appendChild(top);
 
-    // Line 2: Description
+    // Line 2: description
     if (evt.description) {
       const desc = document.createElement("div");
       desc.className = "event-desc";
@@ -65,70 +60,86 @@
       row.appendChild(desc);
     }
 
-    // Line 3: Location on last line (include time if present)
+    // Line 3: location / time
     const location = (evt.location || "").trim();
     const time = (evt.time || "").trim();
 
-    let metaText = "";
-    if (location && time) metaText = `${location} · ${time}`;
-    else metaText = location || time;
+    let meta = "";
+    if (location && time) meta = `${location} · ${time}`;
+    else meta = location || time;
 
-    if (metaText) {
-      const meta = document.createElement("div");
-      meta.className = "event-meta";
-      meta.textContent = metaText;
-      row.appendChild(meta);
+    if (meta) {
+      const metaDiv = document.createElement("div");
+      metaDiv.className = "event-meta";
+      metaDiv.textContent = meta;
+      row.appendChild(metaDiv);
     }
 
     return row;
   }
 
-  async function loadEvents() {
-    if (!listEl) return;
+  function addSectionTitle(text) {
+    const h = document.createElement("h3");
+    h.className = "event-section-title";
+    h.textContent = text;
+    listEl.appendChild(h);
+  }
 
+  function addDivider() {
+    const div = document.createElement("div");
+    div.className = "event-section-divider";
+    listEl.appendChild(div);
+  }
+
+  async function loadEvents() {
     try {
       const res = await fetch("data/events.json", { cache: "no-store" });
-      if (!res.ok) throw new Error(`Could not load events.json (HTTP ${res.status})`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = await res.json();
       const events = Array.isArray(data.events) ? data.events : [];
 
       const today = todayAtMidnight();
 
-      // Filter out expired events
-      const active = events.filter(e => !isExpired(e, today));
+      const active = events.filter(evt => !isExpired(evt, today));
 
-      // Split pinned vs normal
-      const pinned = active.filter(e => isPinnedNow(e, today));
-      const normal = active.filter(e => !isPinnedNow(e, today));
+      const pinned = active.filter(evt => evt.pinned);
+      const normal = active.filter(evt => !evt.pinned);
 
-      // Sort by dateStart ascending
       const byStart = (a, b) => {
         const da = parseISODate(a.dateStart) || new Date(0);
         const db = parseISODate(b.dateStart) || new Date(0);
         return da - db;
       };
+
       pinned.sort(byStart);
       normal.sort(byStart);
 
-      const finalList = [...pinned, ...normal];
-
-      // Render
       listEl.innerHTML = "";
       if (errorEl) errorEl.hidden = true;
 
-      if (!finalList.length) {
+      if (!pinned.length && !normal.length) {
         if (emptyEl) emptyEl.hidden = false;
         return;
       }
       if (emptyEl) emptyEl.hidden = true;
 
-      finalList.forEach(evt => listEl.appendChild(buildEventRow(evt)));
+      if (pinned.length) {
+        addSectionTitle("Pinned Events");
+        pinned.forEach(evt => listEl.appendChild(buildEventRow(evt)));
+        if (normal.length) addDivider();
+      }
+
+      if (normal.length) {
+        addSectionTitle(pinned.length ? "All Events" : "Upcoming Events");
+        normal.forEach(evt => listEl.appendChild(buildEventRow(evt)));
+      }
+
     } catch (err) {
       console.error(err);
       if (errorEl) {
         errorEl.hidden = false;
-        errorEl.textContent = "Sorry — events could not be loaded.";
+        errorEl.textContent = "Events could not be loaded.";
       }
     }
   }

@@ -80,15 +80,27 @@
           <div class="carousel-track" tabindex="0">
             <!-- Replace placeholders with real images later -->
             <figure class="carousel-item">
-              <img src="assets/img/hero.jpg" alt="Club photo" />
+              <img src="assets/img/carousel/hero.jpg" alt="Club photo" />
               <figcaption class="sr-only">Club photo</figcaption>
             </figure>
             <figure class="carousel-item">
-              <img src="assets/img/hero.jpg" alt="Club photo" />
+              <img src="assets/img/carousel/IMG_20260201_150307.jpg" alt="Club photo" />
               <figcaption class="sr-only">Club photo</figcaption>
             </figure>
             <figure class="carousel-item">
-              <img src="assets/img/hero.jpg" alt="Club photo" />
+              <img src="assets/img/carousel/IMG_20260201_150310.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+            <figure class="carousel-item">
+              <img src="assets/img/carousel/IMG_20260201_150316.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+            <figure class="carousel-item">
+              <img src="assets/img/carousel/IMG_20260201_150321.jpg" alt="Club photo" />
+              <figcaption class="sr-only">Club photo</figcaption>
+            </figure>
+            <figure class="carousel-item">
+              <img src="assets/img/carousel/IMG_20260202_092829.jpg" alt="Club photo" />
               <figcaption class="sr-only">Club photo</figcaption>
             </figure>
           </div>
@@ -134,10 +146,35 @@
         <p id="announcements-error" hidden></p>
         <p id="announcements-empty" hidden>No announcements at this time.</p>
 
-        <!-- If you later want non-card announcements, we’ll change this class in CSS cleanup -->
-        <div id="announcements-list" class="cards" aria-live="polite"></div>
+        <div class="announce-carousel" aria-label="Announcements">
+          <button
+            class="btn btn-ghost announce-btn announce-prev"
+            type="button"
+            data-announce="prev"
+            aria-label="Previous announcements"
+          >
+            ‹
+          </button>
+
+          <div
+            id="announcements-list"
+            class="announce-track"
+            tabindex="0"
+            aria-live="polite"
+          ></div>
+
+          <button
+            class="btn btn-ghost announce-btn announce-next"
+            type="button"
+            data-announce="next"
+            aria-label="Next announcements"
+          >
+            ›
+          </button>
+        </div>
       </div>
     </section>
+
 
     <!-- Events -->
     <section class="section">

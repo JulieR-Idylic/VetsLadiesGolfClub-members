@@ -4,7 +4,8 @@
         "id": "sesason_kickoff2026",
         "title": "Season kickoff 2026",
         "dateStart": "2026-03-04",
-        "description": "League registration opens. Details will be posted as they become available.",
+        "time": "10:00 AM",
+        "description": "League Begins!",
         "expiresOn": "2026-11-01",
         "pinned": true
       },
@@ -33,25 +34,7 @@
         "time": "",
         "location": "",
         "description": "GHIN dues $60 to Dennis McKee-Mens Club",
-        "expiresOn": "2026-04-01"
-      },
-      {
-        "id": "clubdues-2026",
-        "title": "Annual Club Dues 2026",
-        "dateStart": "2026-03-01",
-        "time": "",
-        "location": "",
-        "description": "Annual club membership dues $20 to Heidy Wiese, Treasurer",
-        "expiresOn": "2026-05-01"
-      },
-      {
-        "id": "eclectic-registration-2026",
-        "title": "Eclectic 2026",
-        "dateStart": "2026-03-01",
-        "time": "",
-        "location": "",
-        "description": " Last day to enter Eclectic competition; Karen Winter, Eclectic captain",
-        "expiresOn": "2026-05-01"
+        "expiresOn": "2026-02-01"
       }
     ]
   }
