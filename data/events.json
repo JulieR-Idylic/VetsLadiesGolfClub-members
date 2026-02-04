@@ -5,7 +5,7 @@
         "title": "Season kickoff 2026",
         "dateStart": "2026-03-04",
         "time": "10:00 AM",
-        "description": "League Begins!",
+        "description": "League Begins! Eclectic and Hole-in-one competition begins!",
         "expiresOn": "2026-11-01",
         "pinned": true
       },
@@ -35,6 +35,43 @@
         "location": "",
         "description": "GHIN dues $60 to Dennis McKee-Mens Club",
         "expiresOn": "2026-02-01"
+      },
+      {
+        "id": "fallelection-2026",
+        "title": "Ladies club meeting/officer election",
+        "dateStart": "2026-02-11",
+        "time": "8:00 AM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "Fall meeting and election of officers. Iona will send an agenda prior.",
+        "expiresOn": "2026-11-01"
+      },
+      {
+        "id": "season-end-2026",
+        "title": "Season end play and lunch (hosted dessert)",
+        "dateStart": "2026-10-28",
+        "time": "10:00 AM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "666 Devilish Duels competition, costume contest + lunch. Season award announcements.",
+        "expiresOn": "2026-11-01"
+      },
+      {
+        "id": "holidaylunch-2026",
+        "title": "Holiday Party",
+        "dateStart": "2026-12-09",
+        "time": "11:00 AM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "Lunch and putt for presents.",
+        "expiresOn": "2026-11-01"
+      },
+      {
+        "id": "marclubmeeting-2026",
+        "title": "Club Meeting",
+        "dateStart": "2026-03-11",
+        "time": "9:00 AM",
+        "location": "Veterans Memorial Golf Course",
+        "description": "Agenda to be shared prior to the meeting.",
+        "expiresOn": "2026-04-01",
+        "pinned": true
       }
     ]
   }
