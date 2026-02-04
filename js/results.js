@@ -76,12 +76,12 @@
     return n === null ? 0 : n;
   }
 
-  // net = raw - handicap - adjustment (adjustment defaults to 0 if blank)
+  // net = gross - handicap - adjustment (adjustment defaults to 0 if blank)
   function expectedNet(row) {
-    const raw = toNumberOrNull(row.raw);
+    const gross = toNumberOrNull(row.gross);
     const hcp = toNumberOrNull(row.handicap);
-    if (raw === null || hcp === null) return null;
-    return raw - hcp - adjOrZero(row.adjustment);
+    if (gross=== null || hcp === null) return null;
+    return gross - hcp - adjOrZero(row.adjustment);
   }
 
   function placeRank(place) {
@@ -292,7 +292,7 @@
 
       meta.innerHTML = `
         <span class="pill">HCP: ${escapeHtml(safeText(row.handicap ?? "—"))}</span>
-        <span class="pill">Raw: ${escapeHtml(safeText(row.raw ?? "—"))}</span>
+        <span class="pill">Gross: ${escapeHtml(safeText(row.gross ?? "—"))}</span>
         <span class="pill">Adj: ${escapeHtml(displayAdj(row.adjustment))}</span>
         <span class="pill">Net: ${escapeHtml(safeText(row.net ?? "—"))}</span>
         <span class="pill">Payout: ${escapeHtml(dollars(row.payout))}</span>
@@ -347,7 +347,7 @@
       tr.innerHTML = `
         <td>${escapeHtml(safeText(r.name))}</td>
         <td class="num">${escapeHtml(safeText(r.handicap ?? ""))}</td>
-        <td class="num">${escapeHtml(safeText(r.raw ?? ""))}</td>
+        <td class="num">${escapeHtml(safeText(r.gross ?? ""))}</td>
         <td class="num">${escapeHtml(adjCell)}</td>
         <td class="num">${escapeHtml(safeText(r.net ?? ""))}</td>
         <td class="num">${escapeHtml(safeText(r.place ?? ""))}</td>
