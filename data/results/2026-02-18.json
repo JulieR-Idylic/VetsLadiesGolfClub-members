@@ -1,0 +1,13 @@
+{
+  "results18": [
+    { "name": "Alice Smith", "raw": 98, "handicap": 24, "adjustment": "", "net": 74, "place": "T1", "payout": 5 },
+    { "name": "Cindy Lee", "raw": 101, "handicap": 27, "adjustment": 0, "net": 74, "place": "T1", "payout": 5 },
+    { "name": "Beth Jones", "raw": 100, "handicap": 22, "adjustment": 1, "net": 77, "place": 3, "payout": 3.25 },
+    { "name": "Diane Park", "raw": 105, "handicap": 25, "adjustment": "", "net": 80, "place": 4, "payout": 0 }
+  ],
+  "results9": [
+    { "name": "Emma Kim", "raw": 54, "handicap": 16, "adjustment": "", "net": 38, "place": 1, "payout": 5 },
+    { "name": "Fiona West", "raw": 58, "handicap": 20, "adjustment": 1, "net": 37, "place": 2, "payout": 3 },
+    { "name": "Grace Hall", "raw": 56, "handicap": 18, "adjustment": "", "net": 38, "place": 3, "payout": 0 }
+  ]
+}

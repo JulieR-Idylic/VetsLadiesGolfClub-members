@@ -1,0 +1,48 @@
+{
+  "season": "2026",
+  "weeks": [
+    {
+      "date": "2026-02-18",
+      "gamePlanned": "Sweeps",
+      "gameCaptain": "",
+      "notes": "Winter Rules",
+      "isScramblePlanned": false
+    },
+    {
+      "date": "2026-02-25",
+      "gamePlanned": "Low Putts",
+      "gameCaptain": "",
+      "notes": "Winter Rules",
+      "isScramblePlanned": false
+    },
+    {
+      "date": "2026-03-04",
+      "gamePlanned": "Sweeps",
+      "gameCaptain": "",
+      "notes": "no competition",
+      "isScramblePlanned": false
+    },
+    {
+      "date": "2026-03-11",
+      "gamePlanned": "Sweeps",
+      "gameCaptain": "",
+      "notes": "no games",
+      "isScramblePlanned": false
+    },
+    {
+      "date": "2026-03-18",
+      "gamePlanned": "Sweeps",
+      "gameCaptain": "",
+      "notes": "no games",
+      "isScramblePlanned": false
+    },
+    {
+      "date": "2026-03-25",
+      "gamePlanned": "Sweeps",
+      "gameCaptain": "",
+      "notes": "no games",
+      "isScramblePlanned": false
+    }
+  ]
+}
+

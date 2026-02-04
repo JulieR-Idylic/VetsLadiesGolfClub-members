@@ -1,0 +1,11 @@
+{
+  "results18": [
+    { "name": "Team A (Pat / Sue)", "raw": 72, "handicap": 0, "adjustment": "", "net": 72, "place": 1, "payout": 8 },
+    { "name": "Team B (Amy / Jen)", "raw": 74, "handicap": 0, "adjustment": "", "net": 74, "place": "T2", "payout": 2 },
+    { "name": "Team C (Meg / Kim)", "raw": 75, "handicap": 0, "adjustment": 1, "net": 74, "place": "T2", "payout": 2 }
+  ],
+  "results9": [
+    { "name": "Team D (Jan / Beth)", "raw": 36, "handicap": 0, "adjustment": "", "net": 36, "place": 1, "payout": 10 },
+    { "name": "Team E (Sue / Elle)", "raw": 38, "handicap": 0, "adjustment": "", "net": 38, "place": 2, "payout": 5 }
+  ]
+}

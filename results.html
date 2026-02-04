@@ -3,85 +3,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Results & Scores – Vets Ladies Golf Club</title>
-  <meta name="description" content="Results and scores for Vets Ladies Golf Club league play." />
+  <title>Results | Member Area</title>
+
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/results.css" />
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <!-- Header / Nav -->
+  <!-- ===== Member Header / Nav (matches your member-area pattern) ===== -->
   <header class="site-header">
     <div class="container header-inner">
-      <div class="header-left">
-        <a class="brand" href="index.html" aria-label="Member home">
-          <img src="assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
-          <span class="brand-name">Vets Ladies Golf Club</span>
-        </a>
+      <a class="brand" href="index.html" aria-label="Member home">
+        <span class="brand-title">Vets Ladies Golf</span>
+        <span class="brand-subtitle">Member Area</span>
+      </a>
 
-        <a
-          class="btn btn-secondary public-btn"
-          href="https://julier-idylic.github.io/VetsLadiesGolfClub/"
-        >
-          Public site
-        </a>
-      </div>
+      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+        <span class="nav-toggle-bars" aria-hidden="true"></span>
+      </button>
 
-      <nav class="nav" aria-label="Member navigation">
-        <button
-          class="nav-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="nav-menu"
-        >
-          Menu
-        </button>
+      <nav id="navMenu" class="nav-menu" aria-label="Member navigation">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="events.html">Events</a>
+        <a class="nav-link" href="photos.html">Photos</a>
+        <a class="nav-link" href="faq.html">FAQ</a>
+        <a class="nav-link is-active" href="results.html" aria-current="page">Results</a>
 
-        <ul id="nav-menu" class="nav-menu">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="results.html" aria-current="page">Results / Scores</a></li>
-          <li><a href="directory.html">Member Directory</a></li>
-          <li><a href="documents.html">Documents</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-
-          <li class="nav-divider" role="separator" aria-hidden="true"></li>
-
-          <li>
-            <a href="photos.html" target="_blank" rel="noopener noreferrer">
-              Upload Photos
-            </a>
-          </li>
-        </ul>
+        <!-- If you already have a tools/admin grouping in your shared header, keep it there.
+             This page will work fine without it. -->
       </nav>
     </div>
   </header>
 
-  <main id="main">
-    <section class="section">
-      <div class="container">
-        <h1>Results & Scores</h1>
-        <p class="lead">
-          Weekly results, scores, and season standings will be posted here.
-        </p>
+  <main class="container results-page">
+    <header class="page-head">
+      <h1>Results</h1>
+      <p class="muted">Published results only.</p>
+    </header>
 
-        <p style="color: var(--muted);">
-          Results are typically updated after weekly play by the Game Captain.
-        </p>
+    <section class="results-controls" aria-label="Results controls">
+      <div class="segmented" role="tablist" aria-label="Select holes">
+        <button class="seg-btn is-active" type="button" data-holes="18" role="tab" aria-selected="true">18 holes</button>
+        <button class="seg-btn" type="button" data-holes="9" role="tab" aria-selected="false">9 holes</button>
+      </div>
 
-        <p style="color: var(--muted); margin-top: 1rem;">
-          This section is coming soon.
-        </p>
+      <label class="week-picker">
+        <span class="label">Week</span>
+        <select id="weekSelect" aria-label="Select week"></select>
+      </label>
+    </section>
+
+    <section class="results-summary" aria-label="Selected week summary">
+      <div class="summary-head">
+        <div>
+          <h2 id="weekHeading" class="week-title">—</h2>
+          <p id="weekSubhead" class="muted">—</p>
+        </div>
+
+        <div class="summary-actions">
+          <a id="fullSheetLink" class="btn-link is-hidden" href="#" target="_blank" rel="noopener">View full sheet</a>
+          <button id="toggleDetails" class="btn" type="button" aria-expanded="false">View full results</button>
+        </div>
+      </div>
+
+      <div id="winnerCards" class="winner-cards" aria-label="Top finishers"></div>
+
+      <div id="detailsPanel" class="details is-collapsed" aria-label="Full results">
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th class="num">HCP</th>
+                <th class="num">Raw</th>
+                <th class="num">Adj</th>
+                <th class="num">Net</th>
+                <th class="num">Place</th>
+                <th class="num">Payout</th>
+              </tr>
+
+            </thead>
+            <tbody id="resultsTbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state is-hidden" role="status">
+        No published results found.
+      </div>
+
+      <div id="errorState" class="empty-state is-hidden" role="alert">
+        Couldn’t load results. Please try again later.
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <small>© <span id="year"></span> Vets Ladies Golf Club</small>
-    </div>
-  </footer>
-
-  <script src="js/main.js"></script>
+  <!-- If your member header uses a shared nav script, keep it included as you do on other pages -->
+  <script src="js/results.js" defer></script>
 </body>
 </html>
