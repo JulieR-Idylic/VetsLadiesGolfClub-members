@@ -173,8 +173,8 @@
 
   async function loadSchedule() {
     const schedule = await fetchJson([
-      "data/schedule.json",
-      "../data/schedule.json"
+      "data/results/schedule.json",
+      "../data/results/schedule.json"
     ]);
     const weeks = Array.isArray(schedule.weeks) ? schedule.weeks : [];
     scheduleByDate = new Map(weeks.map(w => [w.date, w]));
