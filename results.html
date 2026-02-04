@@ -11,27 +11,53 @@
 
 <body>
   <!-- ===== Member Header / Nav (matches your member-area pattern) ===== -->
+  <!-- HEADER / NAV (same as index.html) -->
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="index.html" aria-label="Member home">
-        <span class="brand-title">Vets Ladies Golf</span>
-        <span class="brand-subtitle">Member Area</span>
-      </a>
 
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
-        <span class="nav-toggle-bars" aria-hidden="true"></span>
-      </button>
+      <!-- LEFT: Brand + Public button -->
+      <div class="header-left">
+        <a class="brand" href="index.html" aria-label="Member home">
+          <img src="assets/img/logo.png" alt="Vets Ladies Golf Club logo" class="brand-logo" />
+          <span class="brand-name">Vets Ladies Golf Club</span>
+        </a>
 
-      <nav id="navMenu" class="nav-menu" aria-label="Member navigation">
-        <a class="nav-link" href="index.html">Home</a>
-        <a class="nav-link" href="events.html">Events</a>
-        <a class="nav-link" href="photos.html">Photos</a>
-        <a class="nav-link" href="faq.html">FAQ</a>
-        <a class="nav-link is-active" href="results.html" aria-current="page">Results</a>
+        <a
+          class="btn btn-secondary public-btn"
+          href="https://julier-idylic.github.io/VetsLadiesGolfClub/"
+        >
+          Public site
+        </a>
+      </div>
 
-        <!-- If you already have a tools/admin grouping in your shared header, keep it there.
-             This page will work fine without it. -->
+      <!-- RIGHT: Menu -->
+      <nav class="nav" aria-label="Member navigation">
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="nav-menu"
+        >
+          Menu
+        </button>
+
+        <ul id="nav-menu" class="nav-menu">
+          <li><a href="index.html" aria-current="page">Home</a></li>
+          <li><a href="results.html">Results / Scores</a></li>
+          <li><a href="directory.html">Member Directory</a></li>
+          <li><a href="documents.html">Documents</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+
+          <li class="nav-divider" role="separator" aria-hidden="true"></li>
+
+          <li>
+            <a href="photos.html" target="_blank" rel="noopener noreferrer">
+              Upload Photos
+            </a>
+          </li>
+        </ul>
       </nav>
+
     </div>
   </header>
 
@@ -100,5 +126,7 @@
 
   <!-- If your member header uses a shared nav script, keep it included as you do on other pages -->
   <script src="js/results.js" defer></script>
+  <script src="js/main.js"></script>
+  
 </body>
 </html>
