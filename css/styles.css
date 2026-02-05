@@ -43,7 +43,9 @@ img{ max-width: 100%; height: auto; display: block; }
   z-index: 9999;
 }
 
-/* Header / Nav */
+/* =========================
+   Header / Nav (Consolidated)
+   ========================= */
 .site-header{
   position: sticky;
   top: 0;
@@ -59,6 +61,13 @@ img{ max-width: 100%; height: auto; display: block; }
   justify-content: space-between;
   gap: 1rem;
   padding: .75rem 0;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap: .75rem;
+  min-width: 0;
 }
 
 .brand{
@@ -79,102 +88,10 @@ img{ max-width: 100%; height: auto; display: block; }
 
 .public-btn{ white-space: nowrap; }
 
+/* Nav wrapper anchors dropdown */
 .nav{ position: relative; }
 
-.nav-toggle{
-  display: none;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: .5rem .75rem;
-  background: #fff;
-}
-.nav-toggle:focus-visible{ outline: var(--focus); }
-
-.nav-menu{
-  display: flex;
-  gap: 1rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-menu a{
-  color: inherit;
-  text-decoration: none;
-  padding: .4rem .5rem;
-  border-radius: 10px;
-}
-.nav-menu a:focus-visible{ outline: var(--focus); }
-.nav-menu a:hover{ background: var(--bg-alt); }
-
-.nav-menu a[aria-current="page"]{
-  background: var(--bg-alt);
-  border: 1px solid var(--border);
-}
-
-.nav-divider{
-  height: 1px;
-  background: var(--border);
-  margin: 0.5rem 0;
-}
-
-/* === Final nav behavior: always-collapsed hamburger === */
-
-/* Always show hamburger */
-.nav-toggle{
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-/* Add hamburger icon before "Menu" text */
-.nav-toggle::before{
-  content: "☰";
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-/* Always hide menu unless opened */
-.nav-menu{
-  display: none;
-}
-
-/* Open state */
-.nav-menu.open{
-  display: flex;
-  position: absolute;
-  right: 0;
-  top: calc(100% + 10px);
-  flex-direction: column;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 0.5rem;
-  min-width: 220px;
-  z-index: 100;
-}
-
-/* Make menu items comfortable to tap */
-.nav-menu a{
-  padding: 0.5rem 0.6rem;
-}
-
-/* Header layout: left group + right menu */
-.header-inner{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap: 1rem;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  gap: .75rem;
-  min-width: 0; /* prevents overflow issues */
-}
-
-/* Make the two header buttons feel like a matched set */
+/* --- Buttons look consistent --- */
 .public-btn,
 .nav-toggle{
   display:inline-flex;
@@ -187,15 +104,11 @@ img{ max-width: 100%; height: auto; display: block; }
   white-space: nowrap;
 }
 
-/* Menu should be more prominent */
+/* Hamburger toggle (always shown) */
 .nav-toggle{
   border: 1px solid #111;
   background: #111;
   color: #fff;
-}
-
-/* Hamburger icon + label */
-.nav-toggle{
   gap: .45rem;
 }
 .nav-toggle::before{
@@ -203,33 +116,75 @@ img{ max-width: 100%; height: auto; display: block; }
   font-size: 1.1rem;
   line-height: 1;
 }
-
-/* Optional: show X when open */
 .nav-toggle[aria-expanded="true"]::before{
   content: "✕";
 }
+.nav-toggle:focus-visible{ outline: var(--focus); }
 
-/* Keep dropdown anchored to the nav (right side) */
-.nav{ position: relative; }
-
-/* Always collapsed behavior (if you already added this earlier, keep it) */
-.nav-menu{ display:none; }
-.nav-menu.open{
-  display:flex;
-  position:absolute;
-  right:0;
-  top: calc(100% + 10px);
-  flex-direction:column;
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius: var(--radius);
-  padding:.5rem;
-  min-width: 220px;
-  z-index:100;
+/* Base menu (hidden unless open) */
+.nav-menu{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
 }
 
+/* Open dropdown menu */
+.nav-menu.open{
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  min-width: 220px;
+  z-index: 100;
 
-/* Layout sections */
+  /* KEY FIX: keep dropdown compact */
+  gap: .25rem;
+}
+
+/* Menu links */
+.nav-menu a{
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+  line-height: 1.2;
+}
+.nav-menu a:hover{ background: var(--bg-alt); }
+.nav-menu a:focus-visible{ outline: var(--focus); }
+.nav-menu a[aria-current="page"]{
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+}
+
+/* Optional divider inside dropdown */
+.nav-divider{
+  height: 1px;
+  background: var(--border);
+  margin: 0.35rem 0;
+}
+
+/* Hanging indent ONLY for the long wrapping label
+   (requires <li class="wrap-indent"> on that one item) */
+.nav-menu.open .wrap-indent a{
+  padding-left: 1.1rem;
+  text-indent: -1.1rem;
+}
+
+/* Hide Public button on tiny screens */
+@media (max-width: 360px){
+  .public-btn{ display: none; }
+}
+
+/* =================
+   Layout sections
+   ================= */
 .section{ padding: 2.25rem 0; }
 .section-alt{
   background: var(--bg-alt);
@@ -239,7 +194,7 @@ img{ max-width: 100%; height: auto; display: block; }
 
 .lead{ color: var(--muted); font-size: 1.05rem; margin: 0 0 1rem; }
 
-/* Cards (used for announcements currently) */
+/* Cards */
 .cards{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -278,10 +233,6 @@ img{ max-width: 100%; height: auto; display: block; }
 .site-footer{
   padding: 1.5rem 0;
   border-top: 1px solid var(--border);
-}
-
-.carousel-track{
-  scroll-behavior: smooth;
 }
 
 /* Events (compact rows) */
@@ -344,75 +295,10 @@ img{ max-width: 100%; height: auto; display: block; }
   text-transform: uppercase;
   letter-spacing: .05em;
 }
-
 .announcement-section-divider{
   height: 1px;
   background: var(--border);
   margin: 12px 0;
-}
-
-/* Announcements horizontal scroller */
-.announce-carousel{
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: .5rem;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.announce-track{
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: .5rem;
-}
-
-.announce-track:focus-visible{
-  outline: var(--focus);
-  outline-offset: 2px;
-  border-radius: 12px;
-}
-
-/* Each announcement card becomes a “slide” */
-.announce-track .card{
-  flex: 0 0 85%;
-  scroll-snap-align: start;
-}
-
-/* On wider screens, show multiple cards */
-@media (min-width: 820px){
-  .announce-track .card{ flex-basis: 340px; } /* fixed-ish card width */
-}
-
-/* Optional: hide arrows on small screens (swipe/scroll instead) */
-@media (max-width: 620px){
-  .announce-btn{ display: none; }
-}
-
-/* Responsive */
-@media (max-width: 820px){
-  .cards{ grid-template-columns: 1fr; }
-
-  .nav-toggle{ display: inline-flex; }
-
-  .nav-menu{
-    display: none;
-    position: absolute;
-    right: 0;
-    top: calc(100% + 10px);
-    flex-direction: column;
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: .5rem;
-    min-width: 200px;
-  }
-  .nav-menu.open{ display: flex; }
-}
-
-@media (max-width: 360px){
-  .public-btn{ display: none; }
 }
 
 /* ================================
@@ -422,15 +308,19 @@ img{ max-width: 100%; height: auto; display: block; }
 .announce-carousel{
   position: relative;
   margin-top: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: .5rem;
+  align-items: center;
 }
 
-/* Horizontal scroll track */
 .announce-track{
   display: flex;
   gap: 1rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding: 0.25rem 2.75rem 0.75rem; /* room for overlay arrows */
+  padding: 0.25rem 2.75rem 0.75rem;
+  scroll-behavior: smooth;
 }
 
 .announce-track:focus-visible{
@@ -439,14 +329,15 @@ img{ max-width: 100%; height: auto; display: block; }
   border-radius: 12px;
 }
 
-/* Each announcement card */
 .announce-track .card{
-  flex: 0 0 320px;        /* desktop width */
+  flex: 0 0 320px;
   scroll-snap-align: start;
 }
 
 /* Mobile: swipe-first behavior */
 @media (max-width: 720px){
+  .cards{ grid-template-columns: 1fr; }
+
   .announce-track{
     padding-left: 1rem;
     padding-right: 1rem;
@@ -473,7 +364,6 @@ img{ max-width: 100%; height: auto; display: block; }
   background: rgba(255,255,255,0.9);
   border: 1px solid var(--border);
 }
-
 .announce-prev{ left: 0; }
 .announce-next{ right: 0; }
 
@@ -491,13 +381,16 @@ img{ max-width: 100%; height: auto; display: block; }
   white-space:nowrap;border:0;
 }
 
-/* Carousel */
+/* =================
+   Generic Carousel
+   ================= */
 .carousel-track{
   display:flex;
   gap: 1rem;
   overflow-x:auto;
   scroll-snap-type: x mandatory;
   padding-bottom: .5rem;
+  scroll-behavior: smooth;
 }
 .carousel-item{
   flex: 0 0 80%;

@@ -1,5 +1,12 @@
 (() => {
-  // ---------- Elements ----------
+  // ============================
+  // CONFIG
+  // ============================
+  const RESULTS_API = "https://script.google.com/macros/s/AKfycbximdmeQ6IHZW3rUT9c-mg8VHA2LcBDIyKMqcC5-hLZIXcU6-LW1-jMWZTSwAS8z-XbgQ/exec"; // no ?mode=...
+
+  // ============================
+  // ELEMENTS
+  // ============================
   const weekSelect = document.getElementById("weekSelect");
   const weekHeading = document.getElementById("weekHeading");
   const weekSubhead = document.getElementById("weekSubhead");
@@ -7,27 +14,72 @@
   const resultsTbody = document.getElementById("resultsTbody");
   const toggleDetailsBtn = document.getElementById("toggleDetails");
   const detailsPanel = document.getElementById("detailsPanel");
-  const fullSheetLink = document.getElementById("fullSheetLink");
   const emptyState = document.getElementById("emptyState");
   const errorState = document.getElementById("errorState");
-
   const segButtons = Array.from(document.querySelectorAll(".seg-btn"));
 
-  // Optional: header nav toggle (only if your header uses these)
-  const navToggle = document.querySelector(".nav-toggle");
-  const navMenu = document.getElementById("navMenu");
-
-  // ---------- State ----------
+  // ============================
+  // STATE
+  // ============================
   let selectedHoles = "18";
   let selectedDate = null;
+  let weeks = [];
+  let isLoading = false;
 
-  let publishedWeeksIndex = [];   // from results/index.json (published only)
-  let scheduleByDate = new Map(); // date -> schedule record
-  let loadedWeekResults = null;   // current week file contents
+  // ============================
+  // UI STATE HELPERS
+  // ============================
+  function setLoading(on, message = "Loading results…", opts = {}) {
+    const { resetHeader = false, clearResults = true } = opts;
 
-  // ---------- Helpers ----------
+    isLoading = on;
+
+    if (weekSelect) weekSelect.disabled = on;
+    segButtons.forEach(b => (b.disabled = on));
+
+    if (on) {
+      hideError();
+      showEmpty(message);
+
+      if (clearResults) {
+        if (resultsTbody) resultsTbody.innerHTML = "";
+        if (winnerCards) winnerCards.innerHTML = "";
+      }
+
+      if (resetHeader) {
+        if (weekHeading) weekHeading.textContent = "—";
+        if (weekSubhead) weekSubhead.innerHTML = "";
+      }
+    }
+  }
+
+  function hideEmpty() {
+    emptyState?.classList.add("is-hidden");
+  }
+
+  function hideError() {
+    errorState?.classList.add("is-hidden");
+  }
+
+  function showEmpty(msg) {
+    if (!emptyState) return;
+    emptyState.textContent = msg;
+    emptyState.classList.remove("is-hidden");
+    hideError();
+  }
+
+  function showError(msg) {
+    if (!errorState) return;
+    errorState.textContent = msg || "Couldn’t load results.";
+    errorState.classList.remove("is-hidden");
+    emptyState?.classList.add("is-hidden");
+  }
+
+  // ============================
+  // HELPERS
+  // ============================
   function fmtDate(iso) {
-    const d = new Date(iso + "T12:00:00");
+    const d = new Date(`${iso}T12:00:00`);
     return d.toLocaleDateString(undefined, {
       weekday: "short",
       month: "short",
@@ -38,14 +90,7 @@
 
   function getTodayISO() {
     const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, "0");
-    const d = String(now.getDate()).padStart(2, "0");
-    return `${y}-${m}-${d}`;
-  }
-
-  function safeText(s) {
-    return String(s ?? "");
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   }
 
   function escapeHtml(str) {
@@ -57,16 +102,15 @@
     ));
   }
 
-  function dollars(n) {
-    if (n === null || n === undefined || n === "") return "—";
-    const val = Number(n);
-    if (!Number.isFinite(val)) return escapeHtml(String(n));
-    return `$${val.toFixed(2)}`;
+  function dollars(v) {
+    if (v === "" || v === null || v === undefined) return "—";
+    const n = Number(v);
+    if (!Number.isFinite(n)) return escapeHtml(String(v));
+    return Math.abs(n - Math.round(n)) < 1e-9 ? `$${Math.round(n)}` : `$${n.toFixed(2)}`;
   }
 
-
   function toNumberOrNull(v) {
-    if (v === null || v === undefined || v === "") return null;
+    if (v === "" || v === null || v === undefined) return null;
     const n = Number(v);
     return Number.isFinite(n) ? n : null;
   }
@@ -76,16 +120,14 @@
     return n === null ? 0 : n;
   }
 
-  // net = gross - handicap - adjustment (adjustment defaults to 0 if blank)
-  function expectedNet(row) {
-    const gross = toNumberOrNull(row.gross);
-    const hcp = toNumberOrNull(row.handicap);
-    if (gross=== null || hcp === null) return null;
-    return gross - hcp - adjOrZero(row.adjustment);
+  function expectedNet(r) {
+    const raw = toNumberOrNull(r.raw);
+    const hcp = toNumberOrNull(r.handicap);
+    if (raw === null || hcp === null) return null;
+    return raw - hcp - adjOrZero(r.adjustment);
   }
 
   function placeRank(place) {
-    // Numeric rank for sorting; "T1" -> 1
     if (typeof place === "number") return place;
     const s = String(place ?? "").trim().toUpperCase();
     if (s.startsWith("T")) {
@@ -105,160 +147,113 @@
 
   function placeLabel(place) {
     const r = placeRank(place);
-    const s = String(place ?? "").trim().toUpperCase();
-    const tied = s.startsWith("T");
+    const tied = String(place ?? "").trim().toUpperCase().startsWith("T");
     return tied ? `T-${r}${ordinalSuffix(r)} Place` : `${r}${ordinalSuffix(r)} Place`;
   }
 
   function displayAdj(v) {
-    return (v === null || v === undefined || v === "") ? "—" : String(v);
+    return (v === "" || v === null || v === undefined) ? "—" : String(v);
+  }
+
+  function pickDefaultDate(list) {
+    const today = getTodayISO();
+    const onOrBefore = list.find(w => w.date <= today);
+    return (onOrBefore || list[0] || null)?.date ?? null;
   }
 
   function setSegmentActive(holes) {
     selectedHoles = holes;
     segButtons.forEach(btn => {
-      const isActive = btn.dataset.holes === holes;
-      btn.classList.toggle("is-active", isActive);
-      btn.setAttribute("aria-selected", isActive ? "true" : "false");
+      const active = btn.dataset.holes === holes;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
     });
   }
 
   function setExpanded(expanded) {
+    if (!toggleDetailsBtn || !detailsPanel) return;
     toggleDetailsBtn.setAttribute("aria-expanded", String(expanded));
     detailsPanel.classList.toggle("is-collapsed", !expanded);
     toggleDetailsBtn.textContent = expanded ? "Hide full results" : "View full results";
   }
 
-  function hideStates() {
-    emptyState?.classList.add("is-hidden");
-    errorState?.classList.add("is-hidden");
-  }
+  // ============================
+  // FETCH
+  // ============================
+  async function fetchJson(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
 
-  function showEmpty(message) {
-    if (!emptyState) return;
-    emptyState.textContent = message;
-    emptyState.classList.remove("is-hidden");
-    errorState?.classList.add("is-hidden");
-  }
-
-  function showError(message) {
-    if (!errorState) return;
-    errorState.textContent = message || "Couldn’t load results. Please try again later.";
-    errorState.classList.remove("is-hidden");
-    emptyState?.classList.add("is-hidden");
-  }
-
-  function pickDefaultDate(weeks) {
-    const today = getTodayISO();
-    const onOrBefore = weeks.find(w => w.date <= today);
-    return (onOrBefore || weeks[0] || null)?.date ?? null;
-  }
-
-  // ---------- Data Loading (with safe fallback paths) ----------
-  async function fetchJson(pathOrPaths) {
-    const paths = Array.isArray(pathOrPaths) ? pathOrPaths : [pathOrPaths];
-    let lastErr = null;
-
-    for (const path of paths) {
-      try {
-        const res = await fetch(path, { cache: "no-store" });
-        if (!res.ok) throw new Error(`HTTP ${res.status} for ${path}`);
-        return await res.json();
-      } catch (e) {
-        lastErr = e;
-      }
+    const text = await res.text();
+    if (text.trim().startsWith("<")) {
+      throw new Error(`Non-JSON response (likely HTML). Check web-app access. URL: ${url}`);
     }
-    throw lastErr || new Error("fetchJson failed");
+
+    try {
+      return JSON.parse(text);
+    } catch {
+      throw new Error(`Invalid JSON response. URL: ${url}`);
+    }
   }
 
-  async function loadSchedule() {
-    const schedule = await fetchJson([
-      "data/results/schedule.json",
-      "../data/results/schedule.json"
-    ]);
-    const weeks = Array.isArray(schedule.weeks) ? schedule.weeks : [];
-    scheduleByDate = new Map(weeks.map(w => [w.date, w]));
-  }
+  async function loadPublishedWeeks() {
+    const url = `${RESULTS_API}?mode=published`;
+    const data = await fetchJson(url);
+    if (data?.error) throw new Error(`API error: ${data.error}`);
 
-  async function loadResultsIndex() {
-    const idx = await fetchJson([
-      "data/results/index.json",
-      "../data/results/index.json"
-    ]);
-    const weeks = Array.isArray(idx.weeks) ? idx.weeks : [];
-    publishedWeeksIndex = weeks
-      .filter(w => w && w.published)
+    const list = Array.isArray(data?.weeks) ? data.weeks : [];
+    weeks = list
+      .filter(w => w && w.date)
       .slice()
-      .sort((a, b) => (a.date < b.date ? 1 : -1)); // newest first
+      .sort((a, b) => (a.date < b.date ? 1 : -1));
   }
 
-  async function loadWeekFile(fileName) {
-    return fetchJson([
-      `data/results/${fileName}`,
-      `../data/results/${fileName}`
-    ]);
+  async function loadWeek(dateISO) {
+    const url = `${RESULTS_API}?mode=week&date=${encodeURIComponent(dateISO)}`;
+    const data = await fetchJson(url);
+    if (data?.error) throw new Error(`API error: ${data.error}`);
+    return data;
   }
 
-  // ---------- Rendering ----------
+  // ============================
+  // RENDER
+  // ============================
   function renderWeekDropdown() {
     if (!weekSelect) return;
     weekSelect.innerHTML = "";
 
-    for (const w of publishedWeeksIndex) {
-      const sched = scheduleByDate.get(w.date);
-      const game = sched?.gamePlanned ? ` — ${sched.gamePlanned}` : "";
-
+    for (const w of weeks) {
       const opt = document.createElement("option");
       opt.value = w.date;
-      opt.textContent = `${fmtDate(w.date)}${game}`;
+      const game = (w.gamePlanned || "").trim();
+      opt.textContent = `${fmtDate(w.date)}${game ? ` — ${game}` : ""}`;
       weekSelect.appendChild(opt);
     }
   }
 
-  function findIndexWeek(date) {
-    return publishedWeeksIndex.find(w => w.date === date) || null;
-  }
+  function renderHeader(meta) {
+    if (weekHeading) weekHeading.textContent = fmtDate(meta.date);
 
-  function getResultsForHoles(weekResults, holes) {
-    if (!weekResults) return [];
-    return holes === "9" ? (weekResults.results9 || []) : (weekResults.results18 || []);
-  }
+    const game = (meta.gamePlanned || "").trim() || "—";
+    const captain = (meta.gameCaptain || "").trim() || "—";
+    const notes = (meta.notes || "").trim();
 
-  function renderHeader(indexWeek) {
-    const sched = scheduleByDate.get(indexWeek.date);
-
-    const game = (sched?.gamePlanned ?? "").trim() || "—";
-    const captain = (sched?.gameCaptain ?? "").trim() || "—";
-    const notesRaw = (sched?.notes ?? "").trim();
-
-    if (weekHeading) weekHeading.textContent = fmtDate(indexWeek.date);
-
-    const lines = [
-      `Game: ${game}`,
-      `Game Captain: ${captain}`
-    ];
-    if (notesRaw) lines.push(`Notes: ${notesRaw}`);
+    const lines = [`Game: ${game}`, `Game Captain: ${captain}`];
+    if (notes) lines.push(`Notes: ${notes}`);
 
     if (weekSubhead) {
       weekSubhead.innerHTML = lines.map(l => `<div>${escapeHtml(l)}</div>`).join("");
     }
+  }
 
-    const url = indexWeek.fullSheetUrl || "";
-    if (fullSheetLink) {
-      if (url) {
-        fullSheetLink.href = url;
-        fullSheetLink.classList.remove("is-hidden");
-      } else {
-        fullSheetLink.classList.add("is-hidden");
-      }
-    }
+  function getResultsForHoles(data) {
+    return selectedHoles === "9" ? (data.results9 || []) : (data.results18 || []);
   }
 
   function renderWinners(results) {
     if (!winnerCards) return;
     winnerCards.innerHTML = "";
 
-    // Show ALL entries in places 1–3, including ties
     const top = results
       .slice()
       .filter(r => {
@@ -267,41 +262,25 @@
       })
       .sort((a, b) => placeRank(a.place) - placeRank(b.place));
 
-    if (top.length === 0) {
-      const div = document.createElement("div");
-      div.className = "empty-state";
-      div.textContent = "No placements entered yet for this week.";
-      winnerCards.appendChild(div);
+    if (!top.length) {
+      winnerCards.textContent = "No placements entered yet.";
       return;
     }
 
-    for (const row of top) {
+    for (const r of top) {
       const card = document.createElement("div");
       card.className = "winner-card";
-
-      const rank = document.createElement("div");
-      rank.className = "winner-rank";
-      rank.textContent = placeLabel(row.place);
-
-      const name = document.createElement("div");
-      name.className = "winner-name";
-      name.textContent = safeText(row.name);
-
-      const meta = document.createElement("div");
-      meta.className = "winner-meta";
-
-      meta.innerHTML = `
-        <span class="pill">HCP: ${escapeHtml(safeText(row.handicap ?? "—"))}</span>
-        <span class="pill">Gross: ${escapeHtml(safeText(row.gross ?? "—"))}</span>
-        <span class="pill">Adj: ${escapeHtml(displayAdj(row.adjustment))}</span>
-        <span class="pill">Net: ${escapeHtml(safeText(row.net ?? "—"))}</span>
-        <span class="pill">Payout: ${escapeHtml(dollars(row.payout))}</span>
+      card.innerHTML = `
+        <div class="winner-rank">${placeLabel(r.place)}</div>
+        <div class="winner-name">${escapeHtml(r.name ?? "")}</div>
+        <div class="winner-meta">
+          <span class="pill">HCP: ${escapeHtml(r.handicap ?? "—")}</span>
+          <span class="pill">Raw: ${escapeHtml(r.raw ?? "—")}</span>
+          <span class="pill">Adj: ${escapeHtml(displayAdj(r.adjustment))}</span>
+          <span class="pill">Net: ${escapeHtml(r.net ?? "—")}</span>
+          <span class="pill">Payout: ${escapeHtml(dollars(r.payout))}</span>
+        </div>
       `;
-
-
-      card.appendChild(rank);
-      card.appendChild(name);
-      card.appendChild(meta);
       winnerCards.appendChild(card);
     }
   }
@@ -310,14 +289,11 @@
     if (!resultsTbody) return;
     resultsTbody.innerHTML = "";
 
-    if (!results || results.length === 0) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td colspan="7">No results entered.</td>`;
-      resultsTbody.appendChild(tr);
+    if (!results.length) {
+      resultsTbody.innerHTML = `<tr><td colspan="7">No results entered.</td></tr>`;
       return;
     }
 
-    // Sort by place rank, then net, then name
     const sorted = results.slice().sort((a, b) => {
       const pr = placeRank(a.place) - placeRank(b.place);
       if (pr !== 0) return pr;
@@ -326,124 +302,123 @@
       const bn = toNumberOrNull(b.net);
       if (an !== null && bn !== null && an !== bn) return an - bn;
 
-      return safeText(a.name).localeCompare(safeText(b.name));
+      return String(a.name || "").localeCompare(String(b.name || ""));
     });
 
-    // Sanity check net math (does not affect display)
     for (const r of sorted) {
       const exp = expectedNet(r);
       const net = toNumberOrNull(r.net);
       if (exp !== null && net !== null && exp !== net) {
-        console.warn(`[Results] Net mismatch for ${r.name}: net=${net}, expected=${exp}`);
+        console.warn(`[Results] Net mismatch for ${r.name}: expected ${exp}, got ${net}`);
       }
-    }
 
-    for (const r of sorted) {
-      const adjCell = (r.adjustment === "" || r.adjustment === null || r.adjustment === undefined)
-        ? ""
-        : safeText(r.adjustment);
-
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${escapeHtml(safeText(r.name))}</td>
-        <td class="num">${escapeHtml(safeText(r.handicap ?? ""))}</td>
-        <td class="num">${escapeHtml(safeText(r.gross ?? ""))}</td>
-        <td class="num">${escapeHtml(adjCell)}</td>
-        <td class="num">${escapeHtml(safeText(r.net ?? ""))}</td>
-        <td class="num">${escapeHtml(safeText(r.place ?? ""))}</td>
-        <td class="num">${escapeHtml(dollars(r.payout))}</td>
-      `;
-
-      resultsTbody.appendChild(tr);
+      resultsTbody.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${escapeHtml(r.name ?? "")}</td>
+          <td class="num">${escapeHtml(r.raw ?? "")}</td>
+          <td class="num">${escapeHtml(r.handicap ?? "")}</td>
+          <td class="num">${escapeHtml(r.adjustment ?? "")}</td>
+          <td class="num">${escapeHtml(r.net ?? "")}</td>
+          <td class="num">${escapeHtml(r.place ?? "")}</td>
+          <td class="num">${escapeHtml(dollars(r.payout))}</td>
+        </tr>
+      `);
     }
   }
 
   async function renderSelectedWeek() {
-    hideStates();
+    hideError();
 
-    const indexWeek = findIndexWeek(selectedDate);
-    if (!indexWeek) {
+    const meta = weeks.find(w => w.date === selectedDate);
+    if (!meta) {
       showEmpty("No published results found.");
-      if (weekHeading) weekHeading.textContent = "—";
-      if (weekSubhead) weekSubhead.innerHTML = "";
-      if (winnerCards) winnerCards.innerHTML = "";
-      if (resultsTbody) resultsTbody.innerHTML = "";
       return;
     }
 
-    renderHeader(indexWeek);
+    // Show header immediately (don’t wipe it while loading!)
+    renderHeader(meta);
 
+    // Loading message INSIDE panel, but do NOT reset header
+    setLoading(true, "Loading this week’s results…", { resetHeader: false, clearResults: true });
+
+    let data;
     try {
-      loadedWeekResults = await loadWeekFile(indexWeek.file);
+      data = await loadWeek(meta.date);
     } catch (e) {
       console.error(e);
-      showError(`Couldn’t load results: ${e.message}`);
-      if (winnerCards) winnerCards.innerHTML = "";
-      if (resultsTbody) resultsTbody.innerHTML = "";
+      setLoading(false);
+      showError(`Couldn’t load results. (${e.message})`);
       return;
     }
 
-    const results = getResultsForHoles(loadedWeekResults, selectedHoles);
+    setLoading(false);
+    hideEmpty();
+
+    const results = getResultsForHoles(data);
     renderWinners(results);
     renderTable(results);
-
     setExpanded(false);
   }
 
-  // ---------- Events ----------
+  // ============================
+  // EVENTS
+  // ============================
   function wireEvents() {
     segButtons.forEach(btn => {
       btn.addEventListener("click", async () => {
+        if (isLoading) return;
         setSegmentActive(btn.dataset.holes);
         await renderSelectedWeek();
       });
     });
 
-    if (weekSelect) {
-      weekSelect.addEventListener("change", async () => {
-        selectedDate = weekSelect.value;
-        await renderSelectedWeek();
-      });
-    }
+    weekSelect?.addEventListener("change", async () => {
+      if (isLoading) return;
+      selectedDate = weekSelect.value;
+      await renderSelectedWeek();
+    });
 
-    if (toggleDetailsBtn) {
-      toggleDetailsBtn.addEventListener("click", () => {
-        const expanded = toggleDetailsBtn.getAttribute("aria-expanded") === "true";
-        setExpanded(!expanded);
-      });
-    }
-
-    // Minimal nav toggle (only if your header uses these ids/classes)
-    if (navToggle && navMenu) {
-      navToggle.addEventListener("click", () => {
-        const expanded = navToggle.getAttribute("aria-expanded") === "true";
-        navToggle.setAttribute("aria-expanded", String(!expanded));
-        navMenu.classList.toggle("is-open", !expanded);
-      });
-    }
+    toggleDetailsBtn?.addEventListener("click", () => {
+      const expanded = toggleDetailsBtn.getAttribute("aria-expanded") === "true";
+      setExpanded(!expanded);
+    });
   }
 
-  // ---------- Init ----------
+  // ============================
+  // INIT
+  // ============================
   async function init() {
     try {
-      await Promise.all([loadSchedule(), loadResultsIndex()]);
+      if (!RESULTS_API || RESULTS_API.includes("PASTE_YOUR")) {
+        showError("Results API URL is not set in js/results.js");
+        return;
+      }
 
-      if (!publishedWeeksIndex.length) {
+      // Initial load: show loading and reset header
+      setLoading(true, "Loading published weeks…", { resetHeader: true, clearResults: true });
+
+      await loadPublishedWeeks();
+
+      if (!weeks.length) {
+        setLoading(false);
         showEmpty("No published results found.");
         return;
       }
 
       renderWeekDropdown();
 
-      selectedDate = pickDefaultDate(publishedWeeksIndex);
+      selectedDate = pickDefaultDate(weeks);
       if (selectedDate && weekSelect) weekSelect.value = selectedDate;
 
       setSegmentActive("18");
       wireEvents();
+
+      // Now load first week
       await renderSelectedWeek();
     } catch (e) {
       console.error("Results init failed:", e);
-      showError(`Couldn’t load results: ${e.message}`);
+      setLoading(false);
+      showError(`Couldn’t load results. (${e.message})`);
     }
   }
 
