@@ -1,12 +1,6 @@
 (() => {
-  // ============================
-  // CONFIG
-  // ============================
-  const RESULTS_API = "https://script.google.com/macros/s/AKfycbximdmeQ6IHZW3rUT9c-mg8VHA2LcBDIyKMqcC5-hLZIXcU6-LW1-jMWZTSwAS8z-XbgQ/exec"; // no ?mode=...
+  const RESULTS_API = "https://script.google.com/macros/s/AKfycbximdmeQ6IHZW3rUT9c-mg8VHA2LcBDIyKMqcC5-hLZIXcU6-LW1-jMWZTSwAS8z-XbgQ/exec"; // no ?mode=
 
-  // ============================
-  // ELEMENTS
-  // ============================
   const weekSelect = document.getElementById("weekSelect");
   const weekHeading = document.getElementById("weekHeading");
   const weekSubhead = document.getElementById("weekSubhead");
@@ -18,48 +12,14 @@
   const errorState = document.getElementById("errorState");
   const segButtons = Array.from(document.querySelectorAll(".seg-btn"));
 
-  // ============================
-  // STATE
-  // ============================
   let selectedHoles = "18";
   let selectedDate = null;
   let weeks = [];
   let isLoading = false;
 
-  // ============================
-  // UI STATE HELPERS
-  // ============================
-  function setLoading(on, message = "Loading results…", opts = {}) {
-    const { resetHeader = false, clearResults = true } = opts;
-
-    isLoading = on;
-
-    if (weekSelect) weekSelect.disabled = on;
-    segButtons.forEach(b => (b.disabled = on));
-
-    if (on) {
-      hideError();
-      showEmpty(message);
-
-      if (clearResults) {
-        if (resultsTbody) resultsTbody.innerHTML = "";
-        if (winnerCards) winnerCards.innerHTML = "";
-      }
-
-      if (resetHeader) {
-        if (weekHeading) weekHeading.textContent = "—";
-        if (weekSubhead) weekSubhead.innerHTML = "";
-      }
-    }
-  }
-
-  function hideEmpty() {
-    emptyState?.classList.add("is-hidden");
-  }
-
-  function hideError() {
-    errorState?.classList.add("is-hidden");
-  }
+  // ---------------- UI helpers ----------------
+  function hideEmpty() { emptyState?.classList.add("is-hidden"); }
+  function hideError() { errorState?.classList.add("is-hidden"); }
 
   function showEmpty(msg) {
     if (!emptyState) return;
@@ -75,9 +35,46 @@
     emptyState?.classList.add("is-hidden");
   }
 
-  // ============================
-  // HELPERS
-  // ============================
+  function enableDetailsButton(enabled) {
+    if (!toggleDetailsBtn) return;
+    toggleDetailsBtn.disabled = !enabled;
+  }
+
+  function setExpanded(expanded) {
+    if (!toggleDetailsBtn || !detailsPanel) return;
+    toggleDetailsBtn.setAttribute("aria-expanded", String(expanded));
+    detailsPanel.classList.toggle("is-collapsed", !expanded);
+    toggleDetailsBtn.textContent = expanded ? "Hide full results" : "View full results";
+  }
+
+  function setLoading(on, message = "Loading…", opts = {}) {
+    const { resetHeader = false, clearResults = true } = opts;
+    isLoading = on;
+
+    if (weekSelect) weekSelect.disabled = on;
+    segButtons.forEach(b => (b.disabled = on));
+    enableDetailsButton(false); // disabled while loading
+
+    if (on) {
+      hideError();
+      showEmpty(message);
+
+      if (clearResults) {
+        if (resultsTbody) resultsTbody.innerHTML = "";
+        if (winnerCards) winnerCards.innerHTML = "";
+      }
+
+      if (resetHeader) {
+        if (weekHeading) weekHeading.textContent = "—";
+        if (weekSubhead) weekSubhead.innerHTML = "";
+      }
+
+      // Keep details collapsed while loading
+      setExpanded(false);
+    }
+  }
+
+  // ---------------- formatting helpers ----------------
   function fmtDate(iso) {
     const d = new Date(`${iso}T12:00:00`);
     return d.toLocaleDateString(undefined, {
@@ -86,11 +83,6 @@
       day: "numeric",
       year: "numeric"
     });
-  }
-
-  function getTodayISO() {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   }
 
   function escapeHtml(str) {
@@ -155,6 +147,11 @@
     return (v === "" || v === null || v === undefined) ? "—" : String(v);
   }
 
+  function getTodayISO() {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  }
+
   function pickDefaultDate(list) {
     const today = getTodayISO();
     const onOrBefore = list.find(w => w.date <= today);
@@ -170,16 +167,7 @@
     });
   }
 
-  function setExpanded(expanded) {
-    if (!toggleDetailsBtn || !detailsPanel) return;
-    toggleDetailsBtn.setAttribute("aria-expanded", String(expanded));
-    detailsPanel.classList.toggle("is-collapsed", !expanded);
-    toggleDetailsBtn.textContent = expanded ? "Hide full results" : "View full results";
-  }
-
-  // ============================
-  // FETCH
-  // ============================
+  // ---------------- fetching ----------------
   async function fetchJson(url) {
     const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
@@ -188,12 +176,7 @@
     if (text.trim().startsWith("<")) {
       throw new Error(`Non-JSON response (likely HTML). Check web-app access. URL: ${url}`);
     }
-
-    try {
-      return JSON.parse(text);
-    } catch {
-      throw new Error(`Invalid JSON response. URL: ${url}`);
-    }
+    return JSON.parse(text);
   }
 
   async function loadPublishedWeeks() {
@@ -201,8 +184,7 @@
     const data = await fetchJson(url);
     if (data?.error) throw new Error(`API error: ${data.error}`);
 
-    const list = Array.isArray(data?.weeks) ? data.weeks : [];
-    weeks = list
+    weeks = (Array.isArray(data?.weeks) ? data.weeks : [])
       .filter(w => w && w.date)
       .slice()
       .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -215,9 +197,7 @@
     return data;
   }
 
-  // ============================
-  // RENDER
-  // ============================
+  // ---------------- render ----------------
   function renderWeekDropdown() {
     if (!weekSelect) return;
     weekSelect.innerHTML = "";
@@ -332,13 +312,13 @@
     const meta = weeks.find(w => w.date === selectedDate);
     if (!meta) {
       showEmpty("No published results found.");
+      enableDetailsButton(false);
       return;
     }
 
-    // Show header immediately (don’t wipe it while loading!)
     renderHeader(meta);
 
-    // Loading message INSIDE panel, but do NOT reset header
+    // Keep header visible; show loading message in panel
     setLoading(true, "Loading this week’s results…", { resetHeader: false, clearResults: true });
 
     let data;
@@ -348,6 +328,7 @@
       console.error(e);
       setLoading(false);
       showError(`Couldn’t load results. (${e.message})`);
+      enableDetailsButton(false);
       return;
     }
 
@@ -357,12 +338,13 @@
     const results = getResultsForHoles(data);
     renderWinners(results);
     renderTable(results);
+
+    // Enable "View full results" only when there are rows
+    enableDetailsButton(results.length > 0);
     setExpanded(false);
   }
 
-  // ============================
-  // EVENTS
-  // ============================
+  // ---------------- events ----------------
   function wireEvents() {
     segButtons.forEach(btn => {
       btn.addEventListener("click", async () => {
@@ -379,14 +361,20 @@
     });
 
     toggleDetailsBtn?.addEventListener("click", () => {
+      if (toggleDetailsBtn.disabled) return;
+
       const expanded = toggleDetailsBtn.getAttribute("aria-expanded") === "true";
       setExpanded(!expanded);
+
+      // If we just expanded, scroll the panel into view nicely
+      const nowExpanded = toggleDetailsBtn.getAttribute("aria-expanded") === "true";
+      if (nowExpanded && detailsPanel) {
+        detailsPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
   }
 
-  // ============================
-  // INIT
-  // ============================
+  // ---------------- init ----------------
   async function init() {
     try {
       if (!RESULTS_API || RESULTS_API.includes("PASTE_YOUR")) {
@@ -394,7 +382,7 @@
         return;
       }
 
-      // Initial load: show loading and reset header
+      // Start loading
       setLoading(true, "Loading published weeks…", { resetHeader: true, clearResults: true });
 
       await loadPublishedWeeks();
@@ -413,7 +401,6 @@
       setSegmentActive("18");
       wireEvents();
 
-      // Now load first week
       await renderSelectedWeek();
     } catch (e) {
       console.error("Results init failed:", e);
